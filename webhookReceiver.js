@@ -1,7 +1,7 @@
 const express = require("express");
 const crypto = require("crypto");
 const pool = require('./config/db');
-
+const logger = require('./config/logger');
 const app = express();
 
 app.use(express.json());
@@ -12,7 +12,7 @@ app.post("/webhook-receiver", async (req, res) => {
 
     try {
 
-        console.log("Webhook payload:", req.body);
+        logger.info("Webhook payload:", req.body);
         const signature = req.headers["x-webhook-signature"];
 
         const body = JSON.stringify(req.body);
