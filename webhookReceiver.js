@@ -12,7 +12,7 @@ app.post("/webhook-receiver", async (req, res) => {
 
     try {
 
-        logger.info("Webhook payload:", req.body);
+        logger.info("Webhook payload:  ======>  " +JSON.stringify(req.body));
         const signature = req.headers["x-webhook-signature"];
 
         const body = JSON.stringify(req.body);
@@ -33,6 +33,8 @@ app.post("/webhook-receiver", async (req, res) => {
             "SELECT * FROM webhook_logs WHERE webhook_id = $1",
             [webhookId]
         );
+
+        logger.info("Existing webhook check:", existing.rows);
 
         if (existing.rows.length > 0) {
             console.log("Duplicate webhook ignored");
