@@ -1,6 +1,5 @@
 // require('dotenv').config();
 const { Pool } = require("pg");
-const logger = require('./logger');
 
 // Use DATABASE_URL if available (Render provides this), otherwise use individual vars
 const databaseUrl = process.env.DATABASE_URL;
@@ -34,7 +33,7 @@ async function connectWithRetry(retryCount = 0) {
     try {
         const client = await pool.connect();
         client.release();
-        logger.info("PostgreSQL Connected Successfully");
+        console.log("PostgreSQL Connected Successfully");
         return true;
     } catch (err) {
         if (retryCount < maxRetries) {
@@ -42,7 +41,7 @@ async function connectWithRetry(retryCount = 0) {
                 initialDelayMs * Math.pow(2, retryCount),
                 maxDelayMs
             );
-            logger.warn(
+            console.log(
                 `DB Connection failed (attempt ${retryCount + 1}/${maxRetries}), ` +
                 `retrying in ${delayMs / 1000}s: ${err.message}`
             );
@@ -50,7 +49,7 @@ async function connectWithRetry(retryCount = 0) {
             await new Promise(resolve => setTimeout(resolve, delayMs));
             return connectWithRetry(retryCount + 1);
         } else {
-            logger.error(
+            console.log(
                 `DB Connection failed after ${maxRetries} attempts: ${err.message}. ` +
                 `Please check PostgreSQL is running and credentials are correct.`
             );
@@ -62,7 +61,7 @@ async function connectWithRetry(retryCount = 0) {
 
 // Start connection retry on module load
 connectWithRetry().catch(err => {
-    logger.error("Fatal: Could not establish database connection", { error: err.message });
+    console.log("Fatal: Could not establish database connection", { error: err.message });
 });
 
 module.exports = pool;
