@@ -1,10 +1,2 @@
-.env
 node_modules/
-dist/
-coverage/
-.DS_Store
-*.log
-.idea/
-.vscode/
-*.sublime-project
-*.sublime-workspace
+.env
