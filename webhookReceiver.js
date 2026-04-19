@@ -42,7 +42,7 @@ app.post("/webhook-receiver", async (req, res) => {
         // store webhook
         await pool.query(
             `INSERT INTO webhook_logs 
-            (webhook_id, event, payload, status) 
+            (webhook_id, event_type, payload, status) 
             VALUES ($1,$2,$3,$4)`,
             [webhookId, event, req.body, "processed"]
         );
