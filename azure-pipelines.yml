@@ -1,14 +1,30 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
 - task: NodeTool@0
   inputs:
     checkLatest: true
 
+- script: |
+    node -v
+    npm -v
+  displayName: Check Node and npm versions
+
 - task: npmAuthenticate@0
-  displayName: 'Authenticate to Azure Artifacts feed'
+  displayName: Authenticate to Azure Artifacts feed
   inputs:
     workingFile: .npmrc
     customEndpoint: npm-artifacts-connection
 
+- script: |
+    npm install
+  displayName: Install dependencies
 
 - script: |
-   npm publish  
-  displayName: Publish
+    npm publish
+  displayName: Publish package
