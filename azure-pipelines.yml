@@ -1,29 +1,14 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+- task: NodeTool@0
+  inputs:
+    checkLatest: true
 
-trigger:
-- main
+- task: npmAuthenticate@0
+  displayName: 'Authenticate to Azure Artifacts feed'
+  inputs:
+    workingFile: .npmrc
+    customEndpoint: npm-artifacts-connection
 
-resources:
-- repo: self
 
-variables:
-  tag: '$(Build.BuildId)'
-
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+- script: |
+   npm publish  
+  displayName: Publish
